@@ -1,2 +1,13 @@
-package me.practice.springbootdeveloper;public class SpringBootDeveloperApplication {
+package me.practice.springbootdeveloper;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
+@SpringBootApplication
+public class SpringBootDeveloperApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootDeveloperApplication.class, args);
+
+    }
 }

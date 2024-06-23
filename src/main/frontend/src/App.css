@@ -1,10 +1,13 @@
-.App {
-  text-align: center;
+
+@font-face {
+  font-family: "NanumSquareRoundB";
+  font-weight: normal;
+  src: url("./font/NanumSquareRoundB.ttf") format("truetype");
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+.App {
+  text-align: center;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -35,4 +38,55 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.Logo {
+    text-align: center;
+    margin: 25px;
+}
+
+.Logo > img {
+    width: 130px;
+}
+
+.Logo-sm {
+
+    margin: 25px;
+}
+
+.Logo-sm > img {
+    width: 50px;
+}
+
+.Login {
+    margin: auto;
+    width: 300px;
+}
+
+
+
+.CenterAlign {
+    text-align: center;
+    font-family: 'NanumSquareRoundB';
+    font-size: 130%;
+}
+
+.CenterAlignMd {
+    text-align: center;
+    font-family: 'NanumSquareRoundB';
+    font-size: 80%;
+}
+
+
+.RightAlign {
+    text-align: right;
+    font-size: 90%;
+}
+
+.icon {
+    width: 24px;
+}
+
+.profile {
+    width: 80px;
 }

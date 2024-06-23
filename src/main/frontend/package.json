@@ -3,22 +3,41 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chatscope/chat-ui-kit-react": "^2.0.3",
+    "@stomp/stompjs": "^7.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.7.2",
     "bootstrap": "^5.3.3",
+    "browserify-zlib": "^0.2.0",
+    "express": "^4.19.2",
     "http-proxy-middleware": "^3.0.0",
+    "path-browserify": "^1.0.1",
+    "query-string": "^9.0.0",
+    "querystring": "^0.2.1",
+    "querystring-es3": "^0.2.1",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "react-emoji": "^0.5.0",
+    "react-router-dom": "^6.23.1",
+    "react-scripts": "^5.0.1",
+    "react-scroll-to-bottom": "^4.2.0",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
+    "sockjs": "^0.3.24",
+    "sockjs-client": "^1.6.1",
+    "stomp": "^0.1.1",
+    "web-vitals": "^2.1.4",
+    "web3": "^4.9.0",
+    "ws": "^8.17.0"
   },
   "proxy": "http://localhost:8080",
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -38,5 +57,20 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "assert": "^2.1.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.3",
+    "web3-utils": "^4.3.0"
   }
+
+
 }
