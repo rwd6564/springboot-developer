@@ -83,6 +83,11 @@
     font-size: 90%;
 }
 
+.LeftAlign {
+    text-align: left;
+    font-size: 90%;
+}
+
 .icon {
     width: 24px;
 }
