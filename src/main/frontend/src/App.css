@@ -5,6 +5,19 @@
   src: url("./font/NanumSquareRoundB.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "NanumBarunpenR";
+  font-weight: normal;
+  src: url("./font/NanumBarunpenR.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "NanumSquareRoundR";
+  font-weight: normal;
+  src: url("./font/NanumSquareRoundR.ttf") format("truetype");
+}
+
+
 
 .App {
   text-align: center;
@@ -77,6 +90,18 @@
     font-size: 80%;
 }
 
+.nanum {
+    font-family: 'NanumSquareRoundB';
+}
+
+.nanumR {
+    font-family: 'NanumSquareRoundR';
+}
+
+.nanumpen {
+    font-family: 'NanumBarunpenR';
+}
+
 
 .RightAlign {
     text-align: right;
@@ -95,3 +120,13 @@
 .profile {
     width: 80px;
 }
+
+.height100 {
+    height: 100vh;
+}
+
+.bgtest {
+    background: purple;
+
+}
+

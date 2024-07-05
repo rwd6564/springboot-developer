@@ -1,14 +1,8 @@
 package me.practice.springbootdeveloper.service;
 
 import lombok.RequiredArgsConstructor;
-import me.practice.springbootdeveloper.domain.Chatmessage;
-import me.practice.springbootdeveloper.domain.Chatroom;
-import me.practice.springbootdeveloper.domain.Friend;
-import me.practice.springbootdeveloper.domain.Member;
-import me.practice.springbootdeveloper.dto.AddChatRoomRequest;
-import me.practice.springbootdeveloper.dto.AddChatmessageRequest;
-import me.practice.springbootdeveloper.dto.AddFriendRequest;
-import me.practice.springbootdeveloper.dto.AddMemberRequest;
+import me.practice.springbootdeveloper.domain.*;
+import me.practice.springbootdeveloper.dto.*;
 import me.practice.springbootdeveloper.repository.ChatMessageRepository;
 import me.practice.springbootdeveloper.repository.ChatRoomRepository;
 import me.practice.springbootdeveloper.repository.FriendRepository;
@@ -63,10 +57,45 @@ public class ChatService {
     }
 
 
+    public ChatListResponse getLatestMessageByRoom(long room, String memEmail) {
+        Chatmessage chatmessage = chatMessageRepository.findLatestMessageByRoom(room);
+        System.out.println("+++++++++++++++++getmember 확인용로그++++++++++++++++++");
+        if (memEmail.equals(chatmessage.getFromuser())) {
+            Member member = memberRepository.findByEmail(chatmessage.getTouser())
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
+            return new ChatListResponse(chatmessage, member);
+        }
+        else {
+            Member member = memberRepository.findByEmail(chatmessage.getFromuser())
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
+            return new ChatListResponse(chatmessage, member);
+        }
+    }
+
+
+
     public Member findById(long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found: "+id));
     }
+
+
+    public List<String> getRoomsByUser(String memEmail) {
+        return chatMessageRepository.findRoomsByUser(memEmail);
+    }
+
+
+
+    public List<MemberFriendDTO> getMemberFriendDTOs(String memEmail) {
+        return memberRepository.findMemberFriend(memEmail);
+    }
+
+
+
+    public Long countByEmail(String email) {
+        return memberRepository.countByEmail(email);
+    }
+
 
     public void delete(long id) {
         memberRepository.deleteById(id);

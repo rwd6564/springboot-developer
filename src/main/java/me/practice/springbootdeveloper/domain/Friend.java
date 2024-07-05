@@ -22,9 +22,6 @@ public class Friend {
     @Column(name = "friEmail", nullable = false)
     private String friEmail;
 
-//    @Column(name = "name", nullable = false)
-//    private String name;
-//
     @Builder
     public Friend(Long id, String memEmail, String friEmail) {
         this.id = id;

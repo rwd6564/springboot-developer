@@ -15,4 +15,11 @@ public class MemberResponse {
         this.name = member.getName();
     }
 
+    public MemberResponse(MemberFriendDTO dto) {
+
+        this.email = dto.getEmail();
+        this.pw = "";
+        this.name = dto.getName();
+    }
+
 }

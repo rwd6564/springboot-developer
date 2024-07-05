@@ -31,6 +31,7 @@
     "sockjs": "^0.3.24",
     "sockjs-client": "^1.6.1",
     "stomp": "^0.1.1",
+    "sweetalert2": "^11.12.1",
     "web-vitals": "^2.1.4",
     "web3": "^4.9.0",
     "ws": "^8.17.0"

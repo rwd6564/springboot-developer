@@ -9,7 +9,6 @@ import Join from './Join.js';
 import Home from './Home.js';
 import Main from './Main.js';
 import Chat from './Chat.js';
-import Test from './Test.js';
 
 
 function App() {
@@ -50,7 +49,6 @@ function App() {
                     <Route path="/join" element={<Join />}/>
                     <Route path="/main" element={<Main />}/>
                     <Route path="/chat" element={<Chat />}/>
-                    <Route path="/test" element={<Test />}/>
                   </Routes>
           </BrowserRouter>
   );

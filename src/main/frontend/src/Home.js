@@ -1,4 +1,3 @@
-import './Home.css';
 import {useEffect, useState} from "react";
 import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
