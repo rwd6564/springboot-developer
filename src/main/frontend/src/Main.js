@@ -32,6 +32,12 @@ import {
     Message,
     MessageInput,
     Avatar,
+    ExpansionPanel,
+    ConversationHeader,
+    ConversationList,
+    Conversation,
+    Sidebar,
+    Search,
 } from "@chatscope/chat-ui-kit-react";
 
 
@@ -237,86 +243,70 @@ function Main() {
                         </Navbar.Brand>
                     </Navbar>
                 </>
-                <Row>
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-md-3 col-lg-3">
-                                <Col className="">
-                                    <ul className="list-group">
-                                        <li className="list-group-item bg-secondary bg-opacity-10 nanum">내 프로필
-                                        </li>
-                                        <li className="list-group-item bg-secondary bg-opacity-10 nanumR">
-                                            <div className="CenterAlign  "><img className="profile" src={profile} alt="" /></div>
-                                            {memberInfo.name}<img className="icon" src={edit5} alt="" /><br />{memberInfo.email}
-                                            <div className="row">
-                                                <div className="col-2">
-                                                </div>
-                                            </div>
-                                        </li>
+    <MainContainer responsive>
+<Sidebar position="left">
+          <ExpansionPanel title="내 프로필">
+             <li className="list-group-item nanumR">
+                <div className="CenterAlign  "><img className="profile" src={profile} alt="" /></div>
+                {memberInfo.name}<img className="icon" src={edit5} alt="" /><br />{memberInfo.email}
+                <div className="row">
+                    <div className="col-2">
+                    </div>
+                </div>
+            </li>
+          </ExpansionPanel>
+          <ExpansionPanel title="친구추가">
+         <div className="input-group mb-3">
+             <input onChange={(e) => {
+                 setFriEmail(e.target.value);
+             }} type="text" className="form-control nanumR" placeholder="이메일 입력"
+                 aria-label="Recipient's username" aria-describedby="button-addon2"></input>
+             <button onClick={
+                 () => {
+                     //친구추가요청
+                     postNewFriend(memberInfo, friEmail);
+                     //친구추가 이후 친구목록 다시 불러오기
+                     getFriendList(memberInfo);
+                 }
+             } className="btn btn-outline-secondary" type="button"
+                 id="button-addon2"><img className="icon" src={add2} alt="" /></button>
+         </div>
+          </ExpansionPanel>
+          <ExpansionPanel title="친구">
+{data.map(my_friends => (
+        <p onClick={() => {
+            setTo(my_friends.email);
+            setToname(my_friends.name);
+            abc(my_friends);
+        }
+        }
+            key={my_friends.id}>{my_friends.name}<br /></p>
+    ))}
+          </ExpansionPanel>
 
-                                        <li className="list-group-item bg-secondary bg-opacity-10 ">
-                                            <Accordion defaultActiveKey="0">
-                                                <Card.Header className="nanum">
-                                                    친구추가
-                                                    <CustomToggle eventKey="1"><img className="icon" src={down} alt="" /></CustomToggle>
-                                                </Card.Header>
-                                                <Accordion.Collapse eventKey="1">
-                                                    <Card.Body>
-                                                        <div className="input-group mb-3">
-                                                            <input onChange={(e) => {
-                                                                setFriEmail(e.target.value);
-                                                            }} type="text" className="form-control nanumR" placeholder="이메일 입력"
-                                                                aria-label="Recipient's username" aria-describedby="button-addon2"></input>
-                                                            <button onClick={
-                                                                () => {
-                                                                    //친구추가요청
-                                                                    postNewFriend(memberInfo, friEmail);
-                                                                    //친구추가 이후 친구목록 다시 불러오기
-                                                                    getFriendList(memberInfo);
-                                                                }
-                                                            } className="btn btn-outline-secondary" type="button"
-                                                                id="button-addon2"><img className="icon" src={add2} alt="" /></button>
-                                                        </div>
 
-                                                    </Card.Body>
-                                                </Accordion.Collapse>
-                                            </Accordion>
-                                        </li>
-                                        <li className="list-group-item bg-secondary bg-opacity-10 ">
-                                            <Accordion className="" defaultActiveKey="0">
-                                                <Card.Header className="nanum">
-                                                    친구
-                                                    <CustomToggle eventKey="1"><img className="icon" src={down} alt="" /></CustomToggle>
-                                                </Card.Header>
-                                                <Accordion.Collapse eventKey="1">
-                                                    <Card.Body className="nanumR">
-                                                        {data.map(my_friends => (
-                                                            <p onClick={() => {
-                                                                setTo(my_friends.email);
-                                                                setToname(my_friends.name);
-                                                                abc(my_friends);
-                                                            }
-                                                            }
-                                                                key={my_friends.id}>{my_friends.name}<br /></p>
-                                                        ))}
-                                                    </Card.Body>
-                                                </Accordion.Collapse>
-                                            </Accordion>
-                                        </li>
-                                    </ul>
-                                </Col>
-                            </div>
-                            <div className="col-md-12 col-lg-6 nanum">
-                                            <p ><img className="icon" src={chaticon} alt="" />{toname}</p>
+        </Sidebar>
+
+                            <div className=" nanum">
+                             <ConversationHeader>
+                                        <ConversationHeader.Back />
+                                        <Avatar src={edit2} name="Zoe" />
+                                        <ConversationHeader.Content
+                                          userName={toname}
+                                        />
+
+                                      </ConversationHeader>
+
                                             <div style={{
                                                 position:
                                                     "relative", height: "80vh"
                                             }}>
                                                 {to ?
-                                                    (
+                                                    ( <ChatContainer className="nanumR">
 
-                                                            <ChatContainer className="nanumR">
                                                                 <MessageList>
+
+
                                                                 {prev ? (
                                                                 <>
                                                                     {prev.map((item, index) => (
@@ -326,14 +316,14 @@ function Main() {
                                                                         : (
                                                                             item.fromuser === memberInfo.email ? (
                                                                                 <>
-                                                                                    <Message key={index} model={{ direction: "outgoing", message: item.message }}>
+                                                                                    <Message key={index} model={{ direction: "outgoing", message: item.message, sentTime: item.sysdate }}>
                                                                                         {item.avatar ? (
                                                                                             <Avatar src={item.avatar.src} name={item.avatar.name} />
                                                                                         ) : null}
                                                                                     </Message><p className="RightAlign">{item.sysdate}</p></>
                                                                             ) : (
                                                                                 <>
-                                                                                    <Message key={index} model={{ direction: "incoming", message: item.message }}>
+                                                                                    <Message key={index} model={{ direction: "incoming", message: item.message, sentTime: item.sysdate }}>
                                                                                         {item.avatar ? (
                                                                                             <Avatar src={item.avatar.src} name={item.avatar.name} />
                                                                                         ) : null}
@@ -350,53 +340,55 @@ function Main() {
                                                                     {messages.map((item, index) => (
                                                                         <>
                                                                             {item.fromuser === memberInfo.email ? (
-                                                                                <>
-                                                                                    <Message key={index} model={{ direction: "outgoing", message: item.message }}>
+                                                                                   <>
+                                                                                    <Message key={index} model={{ direction: "outgoing", message: item.message, sentTime: item.sysdate }}>
                                                                                         {item.avatar ? (
                                                                                             <Avatar src={item.avatar.src} name={item.avatar.name} />
                                                                                         ) : null}
-                                                                                    </Message><p className="RightAlign">{item.sysdate}</p></>
+                                                                                    </Message><p className="RightAlign">{item.sysdate}</p>
+                                                                                    </>
                                                                             ) : (
-                                                                                <>
-                                                                                    <Message key={index} model={{ direction: "incoming", message: item.message }}>
+                                                                            <>
+                                                                                    <Message key={index} model={{ direction: "incoming", message: item.message, sentTime: item.sysdate }}>
                                                                                         {item.avatar ? (
                                                                                             <Avatar src={item.avatar.src} name={item.avatar.name} />
                                                                                         ) : null}
-                                                                                    </Message><p className="LeftAlign">{item.sysdate}</p></>
+                                                                                    </Message><p className="LeftAlign">{item.sysdate}</p>
+                                                                                    </>
                                                                             )}
                                                                         </>
                                                                     ))}
 
                                                                 </MessageList>
-                                                                <MessageInput placeholder="" onSend={handleSend} />
-                                                            </ChatContainer>
+                                                                <MessageInput placeholder="" onSend={handleSend} /></ChatContainer>
 
                                                     ) : (<p>대화를 시작해보세요.</p>)
                                                 }
+
                                             </div>
                             </div>
+                                   <Sidebar position="left" scrollable={false}>
+                                      <Search placeholder="Search..." />
+                                      <ConversationList>
+                                       {chatData.map(my_friends => (
+                                       <Conversation
+                                         name={my_friends.name}
+                                         info={my_friends.message}
+                                         lastActivityTime={my_friends.sysdate}
+                                         onClick={() => {
+                                                           setTo(my_friends.email);
+                                                           setToname(my_friends.name);
+                                                           abc(my_friends);
+                                                       }
+                                                       }
 
-                            <div className="col-md-9 col-lg-3 ">
-                                    <p className="nanum">채팅</p>
-                                    <ul className="list-group ">
-                                        {chatData.map(my_friends => (
-                                            <li className="list-group-item d-flex justify-content-between align-items-center" onClick={() => {
-                                                setTo(my_friends.email);
-                                                setToname(my_friends.name);
-                                                abc(my_friends);
-                                            }
-                                            }
-                                                key={my_friends.id}> <div className="me-auto nanumR"> {my_friends.name}<br/> {my_friends.message}<br/>{my_friends.sysdate}</div>
-                                                <span className="badge text-bg-primary rounded-pill">new</span><br />
-                                                </li>
-                                        ))}
-
-                                    </ul>
-
-                            </div>
-                        </div>
-                    </div>
-                </Row>
+                                       >
+                                         <Avatar src={edit1} name="Lilly" status="available" />
+                                       </Conversation>
+                                      ))}
+                                      </ConversationList>
+                                    </Sidebar>
+                            </MainContainer>
             </div>
 
         );

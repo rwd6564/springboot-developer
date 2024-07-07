@@ -59,7 +59,6 @@ public class ChatService {
 
     public ChatListResponse getLatestMessageByRoom(long room, String memEmail) {
         Chatmessage chatmessage = chatMessageRepository.findLatestMessageByRoom(room);
-        System.out.println("+++++++++++++++++getmember 확인용로그++++++++++++++++++");
         if (memEmail.equals(chatmessage.getFromuser())) {
             Member member = memberRepository.findByEmail(chatmessage.getTouser())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
@@ -108,8 +107,6 @@ public class ChatService {
 
 
     public Chatroom findByUser1AndUser2(String user1, String user2) {
-        System.out.println("user1, user2로 조회.......");
-        System.out.println(chatRoomRepository.findByUser1AndUser2(user1, user2).isEmpty());
         return chatRoomRepository.findByUser1AndUser2(user1, user2)
                 .orElseThrow(() -> new IllegalArgumentException("not found: "+user1 + user2));
 

@@ -1,6 +1,5 @@
 package me.practice.springbootdeveloper.controller;
 
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import me.practice.springbootdeveloper.domain.Chatmessage;
 import me.practice.springbootdeveloper.domain.Chatroom;
@@ -14,9 +13,10 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @RestController
@@ -25,43 +25,42 @@ public class ChatApiController {
 
     private final ChatService chatService;
     private final SimpMessageSendingOperations template;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChatApiController.class);
 
     //채팅방번호 없으면 -> 등록하고 채팅방번호만 return / 있으면 이전대화내용 return
     @PostMapping("/talk")
     public ResponseEntity<List<ChatmessageResponse>> addChatroom(@RequestBody AddChatRoomRequest request) {
-        System.out.println("받은 값" + request.getUser1() + request.getUser2());
+        LOGGER.info("=============채팅방번호, 이전대화내용 조회==============");
+        LOGGER.info("받은 값: {}", request.getUser1() + ", " + request.getUser2());
         long cnt1 = -1;
         long cnt2 = -1;
         cnt1 = chatService.countByUser1AndUser2(request.getUser1(), request.getUser2());
         cnt2 = chatService.countByUser1AndUser2(request.getUser2(), request.getUser1());
         long room = -1;
-
-        System.out.println("카운트 갯수: "+ cnt1 + ", " + cnt2);
+        LOGGER.info("카운트 갯수: {}", cnt1 + ", " + cnt2);
 
         if (cnt1 == 0 && cnt2 == 0) {
-            System.out.println("신규 채팅방");
+            LOGGER.info("=============신규 채팅방==============");
             Chatroom savedChatRoom = chatService.save(request);
             room = savedChatRoom.getId();
 
         } else {
-            System.out.println("이미 채팅방번호가 있음");
+            LOGGER.info("=============이미 채팅방번호가 있음==============");
             if (cnt1 == 1) {
-                System.out.println("=============case1==============");
+                LOGGER.info("=============case1==============");
                 Chatroom chatroom1 = chatService.findByUser1AndUser2(request.getUser1(), request.getUser2());
                 room = chatroom1.getId();
             } else {
-                System.out.println("=============case2==============");
+                LOGGER.info("=============case2==============");
                 Chatroom chatroom2 = chatService.findByUser1AndUser2(request.getUser2(), request.getUser1());
                 room = chatroom2.getId();
             }
-
         }
 
-        System.out.println("++++++++++++++++++++++++++++++");
-        System.out.println("room값: "+ room);
-        System.out.println("결과값: "+ findPrevmessages(room).getBody());
-        System.out.println("++++++++++++++++++++++++++++++");
+        LOGGER.info("++++++++++++++++++++++++++++++");
+        LOGGER.info("room값: {}", room);
+        LOGGER.info("결과값: {}", findPrevmessages(room).getBody());
+        LOGGER.info("++++++++++++++++++++++++++++++");
         return findPrevmessages(room);
     }
 
@@ -69,9 +68,9 @@ public class ChatApiController {
     //메시지 처리
     @MessageMapping("/message/{room}")
     public ResponseEntity<Void> receiveMessage(@DestinationVariable("room") long room, @RequestBody Chatmessage chat, @RequestBody AddChatmessageRequest request ) {
-        System.out.println(room + "===============messageMapping 실행됨==============");
+        LOGGER.info(room + "===============messageMapping 실행됨==============");
         template.convertAndSend("/sub/chatroom/"+chat.getRoom(), chat);
-        System.out.println("받은메시지:" + chat.getId() + chat.getRoom() + chat.getFromuser() +chat.getTouser() + chat.getMessage() + chat.getSysdate());
+        LOGGER.info("받은메시지:" + chat.getId() + chat.getRoom() + chat.getFromuser() +chat.getTouser() + chat.getMessage() + chat.getSysdate());
         chatService.save(request);
 
         return ResponseEntity.ok()
@@ -81,7 +80,7 @@ public class ChatApiController {
 
     //채팅방번호로 이전 대화내용 조회
     public ResponseEntity<List<ChatmessageResponse>> findPrevmessages(long room) {
-        System.out.println("=============이전 대화내용 조회==============");
+        LOGGER.info("=============이전 대화내용 조회==============");
         List<ChatmessageResponse> prevMessages = chatService.findByRoom(room)
                 .stream()
                 .map(ChatmessageResponse::new)
@@ -107,11 +106,10 @@ public class ChatApiController {
     //이메일, 비밀번호로 회원조회해서 일치하면 로그인
     @GetMapping("/home/login")
     public ResponseEntity<MemberResponse> login(@RequestParam("email") String email, @RequestParam("pw") String pw){
-        System.out.println("=============로그인요청==============");
+        LOGGER.info("=============로그인요청==============");
+        LOGGER.info("수신된 email, pw: {}", email + ", " + pw);
         Member member = chatService.findByEmailAndPw(email, pw);
-        System.out.println(member.getEmail());
-        System.out.println(member.getPw());
-        System.out.println(member.getName());
+        LOGGER.info("회원조회결과 : {}", member.getEmail() + ", " + member.getPw() + ", " + member.getName());
         return ResponseEntity.ok()
                 .body(new MemberResponse(member));
     }
@@ -127,12 +125,15 @@ public class ChatApiController {
     //친구목록 조회
     @GetMapping("/api/main/friends")
     public ResponseEntity<List<MemberResponse>> findFriends(@RequestParam("memEmail") String memEmail) {
-        System.out.println("=============친구목록 조회==============");
+        LOGGER.info("=============친구목록 조회==============");
+        LOGGER.info("수신된 memEmail: {}", memEmail);
         List<MemberResponse> friends = chatService.getMemberFriendDTOs(memEmail)
                 .stream()
                 .map(MemberResponse::new)
                 .toList();
-        System.out.println(friends);
+        for (int i = 0; i < friends.size(); i++) {
+            LOGGER.info("friend" +i +": {}", friends.get(i).getEmail() +", " + friends.get(i).getName());
+        }
         return ResponseEntity.ok()
                 .body(friends);
     }
@@ -141,17 +142,18 @@ public class ChatApiController {
     //대화한적있는 채팅방목록 return
     @GetMapping("/api/main/chatlist")
     public ResponseEntity<List<ChatListResponse>> findChatlist(@RequestParam("memEmail") String memEmail) {
-        System.out.println("=============채팅목록조회테스트==============" + memEmail);
+        LOGGER.info("=============채팅목록조회테스트==============");
+        LOGGER.info("수신된 memEmail: {}", memEmail);
         List<String> temp = chatService.getRoomsByUser(memEmail);
         List<ChatListResponse> chatLists = new ArrayList<>();
         for (String s : temp) {
             long room = Long.parseLong(s);
             chatLists.add(chatService.getLatestMessageByRoom(room, memEmail));
         }
+        chatLists.sort((o1, o2) -> o2.getSysdate().compareTo(o1.getSysdate()));
         for (int i=0; i<chatLists.size(); i++) {
-            System.out.println(chatLists.get(i).getRoom() + chatLists.get(i).getEmail() + chatLists.get(i).getName()+ chatLists.get(i).getMessage());
+            LOGGER.info("chat" + i + ": {}", chatLists.get(i).getRoom() + chatLists.get(i).getName()+ chatLists.get(i).getMessage() + chatLists.get(i).getSysdate());
         }
-        System.out.println(chatLists);
         return ResponseEntity.ok()
                 .body(chatLists);
     }
@@ -178,11 +180,11 @@ public class ChatApiController {
     //회원가입
     @PostMapping("/join/member")
     public ResponseEntity<Member> addMember(@RequestBody AddMemberRequest request) {
-        System.out.println("===========회원가입요청=============");
+        LOGGER.info("===========회원가입요청=============");
         Member savedMember = chatService.save(request);
-        System.out.println("이메일:" + savedMember.getEmail());
-        System.out.println("pw:" +savedMember.getPw());
-        System.out.println("이름:" +savedMember.getName());
+        LOGGER.info("이메일:" + savedMember.getEmail());
+        LOGGER.info("pw:" +savedMember.getPw());
+        LOGGER.info("이름:" +savedMember.getName());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedMember);
     }
@@ -191,18 +193,18 @@ public class ChatApiController {
     //친구추가
     @PostMapping("/main/addfriend")
     public ResponseEntity<Friend> addFriend(@RequestBody AddFriendRequest request) {
-        System.out.println("===========친구추가요청=============");
+        LOGGER.info("===========친구추가요청=============");
         long cnt = -1;
         cnt = countByEmail(request.getFriEmail());
-        System.out.println("===========cnt값: " + cnt);
+        LOGGER.info("===========cnt값: " + cnt);
         if (cnt == 0) {
             Friend savedFriend = new Friend(-1L, "temp", "temp");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(savedFriend);
         } else {
             Friend savedFriend = chatService.save(request);
-            System.out.println("내이메일:" + savedFriend.getMemEmail());
-            System.out.println("친구이메일:" +savedFriend.getFriEmail());
+            LOGGER.info("내이메일:" + savedFriend.getMemEmail());
+            LOGGER.info("친구이메일:" +savedFriend.getFriEmail());
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(savedFriend);
         }
