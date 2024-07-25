@@ -8,38 +8,10 @@ import logoimg from './image/logo2.png';
 import Join from './Join.js';
 import Home from './Home.js';
 import Main from './Main.js';
-import Chat from './Chat.js';
+
 
 
 function App() {
-
-/*
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetch("/api/articles")
-        .then((res) => {
-          return res.json();
-        })
-        .then(function (result) {
-            console.log(result)
-            setData(result);
-        })
-  },[]);
-
-    console.log(data)
-*/
-
-/*        <div>
-        <div>
-          <ul>
-            {data.map(user => (
-              <li>제목: {user.title}, 내용: {user.content}</li>
-            ))}
-          </ul>
-        </div>
-        </div> */
-
 
   return (
 
@@ -48,7 +20,7 @@ function App() {
                     <Route path="/" element={<Home />}/>
                     <Route path="/join" element={<Join />}/>
                     <Route path="/main" element={<Main />}/>
-                    <Route path="/chat" element={<Chat />}/>
+
                   </Routes>
           </BrowserRouter>
   );

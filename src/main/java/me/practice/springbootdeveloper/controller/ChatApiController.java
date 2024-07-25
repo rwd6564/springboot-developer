@@ -57,20 +57,19 @@ public class ChatApiController {
             }
         }
 
-        LOGGER.info("++++++++++++++++++++++++++++++");
-        LOGGER.info("room값: {}", room);
-        LOGGER.info("결과값: {}", findPrevmessages(room).getBody());
-        LOGGER.info("++++++++++++++++++++++++++++++");
         return findPrevmessages(room);
     }
 
 
     //메시지 처리
     @MessageMapping("/message/{room}")
-    public ResponseEntity<Void> receiveMessage(@DestinationVariable("room") long room, @RequestBody Chatmessage chat, @RequestBody AddChatmessageRequest request ) {
+    public ResponseEntity<Void> receiveMessage(@DestinationVariable("room") long room,
+                                               @RequestBody Chatmessage chat,
+                                               @RequestBody AddChatmessageRequest request ) {
         LOGGER.info(room + "===============messageMapping 실행됨==============");
         template.convertAndSend("/sub/chatroom/"+chat.getRoom(), chat);
-        LOGGER.info("받은메시지:" + chat.getId() + chat.getRoom() + chat.getFromuser() +chat.getTouser() + chat.getMessage() + chat.getSysdate());
+        LOGGER.info("받은메시지:" + chat.getId() + chat.getRoom() + chat.getFromuser()
+                +chat.getTouser() + chat.getMessage() + chat.getSysdate());
         chatService.save(request);
 
         return ResponseEntity.ok()

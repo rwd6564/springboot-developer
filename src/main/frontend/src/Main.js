@@ -41,7 +41,6 @@ import {
 } from "@chatscope/chat-ui-kit-react";
 
 
-//    <div class="d-none d-lg-block col-md-12 col-lg-6">
 function Main() {
 
     const stompClient = useRef(null);
@@ -90,6 +89,7 @@ function Main() {
     //페이지 로드될때마다 실행
     useEffect(() => {
         connect();
+
         return () => disconnect();
     });
 
@@ -108,7 +108,6 @@ function Main() {
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
     }
-
 
     //친구목록 불러오기
     const getFriendList = (memberInfo) => {
@@ -235,7 +234,13 @@ function Main() {
     //로그인 된 경우 메인화면 렌더링
     if (memberInfo.email != null) {
         return (
-            <div>
+            <div
+            style={{
+                    height: "600px",
+                    position: "relative"
+                  }}
+
+            >
                 <>
                     <Navbar className="bg-body-tertiary">
                         <Navbar.Brand href="#main">
@@ -244,15 +249,11 @@ function Main() {
                     </Navbar>
                 </>
     <MainContainer responsive>
-<Sidebar position="left">
+    <Sidebar position="left">
           <ExpansionPanel title="내 프로필">
              <li className="list-group-item nanumR">
                 <div className="CenterAlign  "><img className="profile" src={profile} alt="" /></div>
                 {memberInfo.name}<img className="icon" src={edit5} alt="" /><br />{memberInfo.email}
-                <div className="row">
-                    <div className="col-2">
-                    </div>
-                </div>
             </li>
           </ExpansionPanel>
           <ExpansionPanel title="친구추가">
@@ -286,27 +287,29 @@ function Main() {
 
 
         </Sidebar>
-
-                            <div className=" nanum">
-                             <ConversationHeader>
+         <ChatContainer>
+<ConversationHeader>
                                         <ConversationHeader.Back />
-                                        <Avatar src={edit2} name="Zoe" />
+                                        <Avatar src={profile} name="Zoe" />
                                         <ConversationHeader.Content
                                           userName={toname}
                                         />
 
                                       </ConversationHeader>
-
-                                            <div style={{
-                                                position:
-                                                    "relative", height: "80vh"
-                                            }}>
-                                                {to ?
-                                                    ( <ChatContainer className="nanumR">
-
-                                                                <MessageList>
-
-
+                                      <MessageList>
+                                       <MessageList.Content
+                                                    style={{
+                                                      display: "flex",
+                                                      flexDirection: "column",
+                                                      justifyContent: "center",
+                                                      height: "100%",
+                                                      textAlign: "center",
+                                                      fontSize: "1em"
+                                                    }}
+                                                  >
+                                            {to ?
+                                                    (
+                                                                <> <MessageList>
                                                                 {prev ? (
                                                                 <>
                                                                     {prev.map((item, index) => (
@@ -357,17 +360,19 @@ function Main() {
                                                                                     </>
                                                                             )}
                                                                         </>
-                                                                    ))}
+                                                                    ))} </MessageList><MessageInput placeholder="" onSend={handleSend} />
 
-                                                                </MessageList>
-                                                                <MessageInput placeholder="" onSend={handleSend} /></ChatContainer>
+                                                                </>
 
                                                     ) : (<p>대화를 시작해보세요.</p>)
-                                                }
+                                                }  </MessageList.Content> </MessageList>
 
-                                            </div>
-                            </div>
-                                   <Sidebar position="left" scrollable={false}>
+
+                </ChatContainer>
+
+
+
+                                   <Sidebar position="right" scrollable={false}>
                                       <Search placeholder="Search..." />
                                       <ConversationList>
                                        {chatData.map(my_friends => (
@@ -383,7 +388,7 @@ function Main() {
                                                        }
 
                                        >
-                                         <Avatar src={edit1} name="Lilly" status="available" />
+                                         <Avatar src={profile} name="Lilly" status="available" />
                                        </Conversation>
                                       ))}
                                       </ConversationList>

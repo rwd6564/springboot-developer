@@ -76,6 +76,17 @@
     width: 300px;
 }
 
+.Join {
+    margin: auto;
+    width: 500px;
+}
+
+
+.LeftAlignLarge {
+    text-align: left;
+    font-family: 'NanumSquareRound';
+    font-size: 130%;
+}
 
 
 .CenterAlign {
@@ -89,6 +100,7 @@
     font-family: 'NanumSquareRoundB';
     font-size: 80%;
 }
+
 
 .nanum {
     font-family: 'NanumSquareRoundB';
@@ -111,6 +123,7 @@
 .LeftAlign {
     text-align: left;
     font-size: 90%;
+    font-family: 'NanumSquareRoundB';
 }
 
 .icon {
