@@ -4,8 +4,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/monchat?&serverTimezone=Asia/Seoul
-    username: root
-    password: wldms6564!
+    username: //본인 아이디
+    password: //본인 비밀번호입력
 
 
   jpa:
